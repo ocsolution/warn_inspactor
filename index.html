@@ -187,16 +187,6 @@
       background: var(--accent-hover);
     }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-ghost:hover {
-      background: var(--bg);
-    }
-
     .btn:focus-visible,
     .lang button:focus-visible {
       outline: 3px solid var(--accent);
@@ -273,14 +263,7 @@
     </ul>
 
     <div class="actions">
-      <a class="btn btn-primary" id="returnBtn" href="/">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-        <span data-i18n="back">Return to website</span>
-      </a>
-      <a class="btn btn-ghost" id="homeBtn" href="/" data-i18n="home">Go to homepage</a>
+      <a class="btn btn-primary" id="homeBtn" href="/" data-i18n="home">Go to homepage</a>
     </div>
 
     <footer data-i18n="footer">If you are a developer working on this site, close the developer tools and reload the
@@ -298,7 +281,6 @@
           tip1: "Never paste code into the browser console that you don’t fully understand.",
           tip2: "Never share your password, OTP code, or login session with anyone.",
           tip3: "Our staff will never ask you to run code in your browser.",
-          back: "Return to website",
           home: "Go to homepage",
           footer: "If you are a developer working on this site, close the developer tools and reload the page."
         },
@@ -310,7 +292,6 @@
           tip1: "កុំបិទភ្ជាប់កូដដែលអ្នកមិនយល់ច្បាស់ ចូលទៅក្នុង Console របស់ Browser។",
           tip2: "កុំចែករំលែកពាក្យសម្ងាត់ លេខកូដ OTP ឬវគ្គចូលប្រើ (Session) របស់អ្នកជាមួយនរណាម្នាក់។",
           tip3: "បុគ្គលិករបស់យើងនឹងមិនដែលស្នើឱ្យអ្នកដំណើរការកូដនៅក្នុង Browser របស់អ្នកឡើយ។",
-          back: "ត្រឡប់ទៅគេហទំព័រវិញ",
           home: "ទៅកាន់ទំព័រដើម",
           footer: "ប្រសិនបើអ្នកជាអ្នកអភិវឌ្ឍន៍គេហទំព័រនេះ សូមបិទ Developer Tools ហើយផ្ទុកទំព័រឡើងវិញ។"
         }
@@ -342,7 +323,7 @@
       var initial = params.get("lang") || saved || ((navigator.language || "").indexOf("km") === 0 ? "km" : "en");
       setLang(i18n[initial] ? initial : "en");
 
-      // Links: ?back=<url> for the return button, ?from=<url> for the homepage button.
+      // Link: ?from=<url> for the homepage button.
       // Accepts relative paths or full http(s) URLs; anything else (javascript:, data:) is ignored.
       // To block redirects to other sites, list trusted hosts here, e.g. ["example.com"]
       // (subdomains are included). Empty = any http(s) host is allowed.
@@ -362,7 +343,6 @@
           }
         } catch (e) { }
       }
-      setLink("returnBtn", params.get("back"));
       setLink("homeBtn", params.get("from"));
 
       // Self-XSS warning for anyone who opens the console on this page.
