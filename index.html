@@ -21,7 +21,7 @@
       --danger: #d92d20;
       --danger-soft: #fdecea;
       --accent: #2ab7a0;
-      --accent-hover: #229884;
+      --accent-hover: color-mix(in srgb, var(--accent) 82%, black);
       --shadow: 0 20px 50px -20px rgba(17, 20, 24, 0.25);
     }
 
@@ -96,6 +96,29 @@
     .lang button[aria-pressed="true"] {
       background: var(--text);
       color: var(--card);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 32px;
+      margin-bottom: 24px;
+      padding-right: 110px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .brand[hidden] {
+      display: none;
+    }
+
+    .brand img {
+      display: block;
+      height: 32px;
+      width: auto;
+      max-width: 160px;
+      object-fit: contain;
     }
 
     .icon {
@@ -219,6 +242,14 @@
       <button type="button" data-lang="km" aria-pressed="false">ខ្មែរ</button>
     </div>
 
+    <div class="brand" id="brand" hidden>
+      <picture id="brandLogo" hidden>
+        <source id="brandLogoDark" media="(prefers-color-scheme: dark)" />
+        <img alt="" />
+      </picture>
+      <span id="brandName"></span>
+    </div>
+
     <div class="icon" aria-hidden="true">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" stroke-linejoin="round">
@@ -297,10 +328,13 @@
         }
       };
 
+      var params = new URLSearchParams(location.search);
+      var brandName = (params.get("name") || "").trim().slice(0, 60);
+
       function setLang(lang) {
         var t = i18n[lang] || i18n.en;
         document.documentElement.lang = lang;
-        document.title = t.docTitle;
+        document.title = brandName ? t.docTitle + " · " + brandName : t.docTitle;
         document.querySelectorAll("[data-i18n]").forEach(function (el) {
           el.textContent = t[el.getAttribute("data-i18n")];
         });
@@ -317,14 +351,13 @@
         b.addEventListener("click", function () { setLang(b.dataset.lang); });
       });
 
-      var params = new URLSearchParams(location.search);
       var saved = null;
       try { saved = localStorage.getItem("inspect-warning-lang"); } catch (e) { }
       var initial = params.get("lang") || saved || ((navigator.language || "").indexOf("km") === 0 ? "km" : "en");
       setLang(i18n[initial] ? initial : "en");
 
-      // Link: ?from=<url> for the homepage button.
-      // Accepts relative paths or full http(s) URLs; anything else (javascript:, data:) is ignored.
+      // URLs (?from, ?logo, ?darkLogo) accept relative paths or full http(s) URLs;
+      // anything else (javascript:, data:) is ignored.
       // To block redirects to other sites, list trusted hosts here, e.g. ["example.com"]
       // (subdomains are included). Empty = any http(s) host is allowed.
       var ALLOWED_HOSTS = [];
@@ -334,16 +367,52 @@
           return host === h || host.slice(-(h.length + 1)) === "." + h;
         });
       }
-      function setLink(id, value) {
-        if (!value) return;
+      function safeUrl(value) {
+        if (!value) return null;
         try {
           var url = new URL(value, location.href);
           if ((url.protocol === "http:" || url.protocol === "https:") && isAllowedHost(url.hostname)) {
-            document.getElementById(id).href = url.href;
+            return url.href;
           }
         } catch (e) { }
+        return null;
       }
-      setLink("homeBtn", params.get("from"));
+
+      // ?from=<url> for the homepage button.
+      var home = safeUrl(params.get("from"));
+      if (home) document.getElementById("homeBtn").href = home;
+
+      // Branding: ?name=, ?logo=, ?darkLogo= (used in dark mode, falls back to logo).
+      var logo = safeUrl(params.get("logo"));
+      var darkLogo = safeUrl(params.get("darkLogo"));
+      var brand = document.getElementById("brand");
+      if (logo || darkLogo) {
+        var picture = document.getElementById("brandLogo");
+        var img = picture.querySelector("img");
+        img.addEventListener("error", function () {
+          picture.hidden = true;
+          brand.hidden = !brandName;
+        });
+        if (logo && darkLogo) document.getElementById("brandLogoDark").srcset = darkLogo;
+        img.src = logo || darkLogo;
+        picture.hidden = false;
+        brand.hidden = false;
+      }
+      if (brandName) {
+        document.getElementById("brandName").textContent = brandName;
+        brand.hidden = false;
+      }
+
+      // ?color= sets the button color: "r, g, b", "rgb(r, g, b)" or hex without "#" (e.g. 17af75).
+      function parseColor(v) {
+        v = (v || "").trim();
+        if (/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v)) return v.charAt(0) === "#" ? v : "#" + v;
+        var m = v.match(/^(?:rgb\()?\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)?$/i);
+        if (m && m[1] <= 255 && m[2] <= 255 && m[3] <= 255) return "rgb(" + m[1] + ", " + m[2] + ", " + m[3] + ")";
+        return null;
+      }
+      var accent = parseColor(params.get("color"));
+      if (accent) document.documentElement.style.setProperty("--accent", accent);
 
       // Self-XSS warning for anyone who opens the console on this page.
       console.log("%cStop! / ឈប់!", "color:#d92d20;font-size:48px;font-weight:800;");
