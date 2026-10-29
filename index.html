@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Security Warning</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 23s9-4.5 9-11.5V4.5L12 1 3 4.5v7C3 18.5 12 23 12 23z' fill='%23d92d20'/><path d='M12 6.5v6.5' stroke='white' stroke-width='2.6' stroke-linecap='round'/><circle cx='12' cy='17' r='1.5' fill='white'/></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -99,26 +101,10 @@
     }
 
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 32px;
       margin-bottom: 24px;
       padding-right: 110px;
       font-size: 16px;
       font-weight: 700;
-    }
-
-    .brand[hidden] {
-      display: none;
-    }
-
-    .brand img {
-      display: block;
-      height: 32px;
-      width: auto;
-      max-width: 160px;
-      object-fit: contain;
     }
 
     .icon {
@@ -242,13 +228,7 @@
       <button type="button" data-lang="km" aria-pressed="false">ខ្មែរ</button>
     </div>
 
-    <div class="brand" id="brand" hidden>
-      <picture id="brandLogo" hidden>
-        <source id="brandLogoDark" media="(prefers-color-scheme: dark)" />
-        <img alt="" />
-      </picture>
-      <span id="brandName"></span>
-    </div>
+    <div class="brand" id="brand" hidden></div>
 
     <div class="icon" aria-hidden="true">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -329,6 +309,18 @@
       };
 
       var params = new URLSearchParams(location.search);
+      // ?d=<base64url of a query string> carries all params in one value;
+      // its values win over plain params of the same name.
+      var packed = params.get("d");
+      if (packed) {
+        try {
+          var b64 = packed.replace(/-/g, "+").replace(/_/g, "/");
+          new URLSearchParams(atob(b64)).forEach(function (value, key) {
+            params.set(key, value);
+          });
+        } catch (e) { }
+        params.delete("d");
+      }
       var brandName = (params.get("name") || "").trim().slice(0, 60);
 
       function setLang(lang) {
@@ -356,7 +348,7 @@
       var initial = params.get("lang") || saved || ((navigator.language || "").indexOf("km") === 0 ? "km" : "en");
       setLang(i18n[initial] ? initial : "en");
 
-      // URLs (?from, ?logo, ?darkLogo) accept relative paths or full http(s) URLs;
+      // ?from accepts a relative path or full http(s) URL;
       // anything else (javascript:, data:) is ignored.
       // To block redirects to other sites, list trusted hosts here, e.g. ["example.com"]
       // (subdomains are included). Empty = any http(s) host is allowed.
@@ -382,24 +374,10 @@
       var home = safeUrl(params.get("from"));
       if (home) document.getElementById("homeBtn").href = home;
 
-      // Branding: ?name=, ?logo=, ?darkLogo= (used in dark mode, falls back to logo).
-      var logo = safeUrl(params.get("logo"));
-      var darkLogo = safeUrl(params.get("darkLogo"));
-      var brand = document.getElementById("brand");
-      if (logo || darkLogo) {
-        var picture = document.getElementById("brandLogo");
-        var img = picture.querySelector("img");
-        img.addEventListener("error", function () {
-          picture.hidden = true;
-          brand.hidden = !brandName;
-        });
-        if (logo && darkLogo) document.getElementById("brandLogoDark").srcset = darkLogo;
-        img.src = logo || darkLogo;
-        picture.hidden = false;
-        brand.hidden = false;
-      }
+      // ?name= shows the site name at the top of the card.
       if (brandName) {
-        document.getElementById("brandName").textContent = brandName;
+        var brand = document.getElementById("brand");
+        brand.textContent = brandName;
         brand.hidden = false;
       }
 
