@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Security Warning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Noto+Sans+Khmer:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #111418;
+      --muted: #5b6470;
+      --border: #e3e6ea;
+      --danger: #d92d20;
+      --danger-soft: #fdecea;
+      --accent: #2ab7a0;
+      --accent-hover: #229884;
+      --shadow: 0 20px 50px -20px rgba(17, 20, 24, 0.25);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1013;
+        --card: #161a1f;
+        --text: #eef1f4;
+        --muted: #9aa3ad;
+        --border: #262c33;
+        --danger: #f97066;
+        --danger-soft: rgba(249, 112, 102, 0.12);
+        --shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.7);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", "Noto Sans Khmer", system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    html[lang="km"] body {
+      font-family: "Noto Sans Khmer", "Inter", system-ui, sans-serif;
+      line-height: 1.8;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 6px solid var(--danger);
+      border-radius: 16px;
+      padding: 40px 32px 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .lang {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .lang button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 13px;
+      padding: 4px 12px;
+      cursor: pointer;
+    }
+
+    .lang button[aria-pressed="true"] {
+      background: var(--text);
+      color: var(--card);
+    }
+
+    .icon {
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--danger-soft);
+      color: var(--danger);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(40px, 9vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--danger);
+      margin-bottom: 12px;
+    }
+
+    .lead {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    p strong {
+      color: var(--text);
+    }
+
+    ul {
+      list-style: none;
+      margin: 20px 0 28px;
+      display: grid;
+      gap: 10px;
+    }
+
+    li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    li svg {
+      flex-shrink: 0;
+      margin-top: 4px;
+      color: var(--danger);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1 1 180px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font: inherit;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--bg);
+    }
+
+    .btn:focus-visible,
+    .lang button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    footer {
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 48px 20px 24px;
+      }
+
+      .lead {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card" role="alert" aria-live="assertive">
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="km" aria-pressed="false">ខ្មែរ</button>
+    </div>
+
+    <div class="icon" aria-hidden="true">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+    </div>
+
+    <h1 data-i18n="title">Stop!</h1>
+    <p class="lead" data-i18n="lead">This is a browser feature intended for developers.</p>
+    <p data-i18n-html="body">
+      If someone told you to copy and paste something here, or to open the developer tools to enable a feature or “hack”
+      an account, <strong>it is a scam</strong> and will give them access to your account and personal data.
+    </p>
+
+    <ul>
+      <li>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+        <span data-i18n="tip1">Never paste code into the browser console that you don’t fully understand.</span>
+      </li>
+      <li>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+        <span data-i18n="tip2">Never share your password, OTP code, or login session with anyone.</span>
+      </li>
+      <li>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+        <span data-i18n="tip3">Our staff will never ask you to run code in your browser.</span>
+      </li>
+    </ul>
+
+    <div class="actions">
+      <a class="btn btn-primary" id="returnBtn" href="/">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        <span data-i18n="back">Return to website</span>
+      </a>
+      <a class="btn btn-ghost" id="homeBtn" href="/" data-i18n="home">Go to homepage</a>
+    </div>
+
+    <footer data-i18n="footer">If you are a developer working on this site, close the developer tools and reload the
+      page.</footer>
+  </main>
+
+  <script>
+    (function () {
+      var i18n = {
+        en: {
+          docTitle: "Security Warning",
+          title: "Stop!",
+          lead: "This is a browser feature intended for developers.",
+          body: "If someone told you to copy and paste something here, or to open the developer tools to enable a feature or “hack” an account, <strong>it is a scam</strong> and will give them access to your account and personal data.",
+          tip1: "Never paste code into the browser console that you don’t fully understand.",
+          tip2: "Never share your password, OTP code, or login session with anyone.",
+          tip3: "Our staff will never ask you to run code in your browser.",
+          back: "Return to website",
+          home: "Go to homepage",
+          footer: "If you are a developer working on this site, close the developer tools and reload the page."
+        },
+        km: {
+          docTitle: "ការព្រមានសុវត្ថិភាព",
+          title: "ឈប់!",
+          lead: "នេះជាមុខងាររបស់កម្មវិធីរុករក (Browser) ដែលបម្រុងទុកសម្រាប់តែអ្នកអភិវឌ្ឍន៍ប៉ុណ្ណោះ។",
+          body: "ប្រសិនបើមាននរណាម្នាក់ប្រាប់អ្នកឱ្យចម្លង និងបិទភ្ជាប់អ្វីមួយនៅទីនេះ ឬបើក Developer Tools ដើម្បីបើកមុខងារណាមួយ ឬ «លួចចូល» គណនីរបស់អ្នកដទៃ <strong>នោះគឺជាការបោកប្រាស់</strong> ហើយវានឹងអនុញ្ញាតឱ្យពួកគេចូលប្រើគណនី និងព័ត៌មានផ្ទាល់ខ្លួនរបស់អ្នក។",
+          tip1: "កុំបិទភ្ជាប់កូដដែលអ្នកមិនយល់ច្បាស់ ចូលទៅក្នុង Console របស់ Browser។",
+          tip2: "កុំចែករំលែកពាក្យសម្ងាត់ លេខកូដ OTP ឬវគ្គចូលប្រើ (Session) របស់អ្នកជាមួយនរណាម្នាក់។",
+          tip3: "បុគ្គលិករបស់យើងនឹងមិនដែលស្នើឱ្យអ្នកដំណើរការកូដនៅក្នុង Browser របស់អ្នកឡើយ។",
+          back: "ត្រឡប់ទៅគេហទំព័រវិញ",
+          home: "ទៅកាន់ទំព័រដើម",
+          footer: "ប្រសិនបើអ្នកជាអ្នកអភិវឌ្ឍន៍គេហទំព័រនេះ សូមបិទ Developer Tools ហើយផ្ទុកទំព័រឡើងវិញ។"
+        }
+      };
+
+      function setLang(lang) {
+        var t = i18n[lang] || i18n.en;
+        document.documentElement.lang = lang;
+        document.title = t.docTitle;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) {
+          el.textContent = t[el.getAttribute("data-i18n")];
+        });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+          el.innerHTML = t[el.getAttribute("data-i18n-html")];
+        });
+        document.querySelectorAll(".lang button").forEach(function (b) {
+          b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
+        });
+        try { localStorage.setItem("inspect-warning-lang", lang); } catch (e) { }
+      }
+
+      document.querySelectorAll(".lang button").forEach(function (b) {
+        b.addEventListener("click", function () { setLang(b.dataset.lang); });
+      });
+
+      var params = new URLSearchParams(location.search);
+      var saved = null;
+      try { saved = localStorage.getItem("inspect-warning-lang"); } catch (e) { }
+      var initial = params.get("lang") || saved || ((navigator.language || "").indexOf("km") === 0 ? "km" : "en");
+      setLang(i18n[initial] ? initial : "en");
+
+      // Links: ?back=<url> for the return button, ?from=<url> for the homepage button.
+      // Accepts relative paths or full http(s) URLs; anything else (javascript:, data:) is ignored.
+      // To block redirects to other sites, list trusted hosts here, e.g. ["example.com"]
+      // (subdomains are included). Empty = any http(s) host is allowed.
+      var ALLOWED_HOSTS = [];
+      function isAllowedHost(host) {
+        if (!ALLOWED_HOSTS.length || host === location.hostname) return true;
+        return ALLOWED_HOSTS.some(function (h) {
+          return host === h || host.slice(-(h.length + 1)) === "." + h;
+        });
+      }
+      function setLink(id, value) {
+        if (!value) return;
+        try {
+          var url = new URL(value, location.href);
+          if ((url.protocol === "http:" || url.protocol === "https:") && isAllowedHost(url.hostname)) {
+            document.getElementById(id).href = url.href;
+          }
+        } catch (e) { }
+      }
+      setLink("returnBtn", params.get("back"));
+      setLink("homeBtn", params.get("from"));
+
+      // Self-XSS warning for anyone who opens the console on this page.
+      console.log("%cStop! / ឈប់!", "color:#d92d20;font-size:48px;font-weight:800;");
+      console.log(
+        "%cThis is a browser feature intended for developers. If someone told you to paste something here, it is a scam and will give them access to your account.",
+        "font-size:16px;"
+      );
+    })();
+  </script>
+</body>
+
+</html>
