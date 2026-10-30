@@ -361,6 +361,8 @@
       }
       function safeUrl(value) {
         if (!value) return null;
+        // "kedtec.com/page" has no scheme and would resolve relative to this page.
+        if (/^[a-z0-9-]+(\.[a-z0-9-]+)+(:\d+)?([\/?#]|$)/i.test(value)) value = "https://" + value;
         try {
           var url = new URL(value, location.href);
           if ((url.protocol === "http:" || url.protocol === "https:") && isAllowedHost(url.hostname)) {
@@ -370,8 +372,9 @@
         return null;
       }
 
-      // ?from=<url> for the homepage button.
-      var home = safeUrl(params.get("from"));
+      // ?from=<url> for the homepage button, falling back to the referring
+      // page when ?from is missing or not allowed.
+      var home = safeUrl(params.get("from")) || safeUrl(document.referrer);
       if (home) document.getElementById("homeBtn").href = home;
 
       // ?name= shows the site name at the top of the card.
